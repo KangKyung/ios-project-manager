@@ -1,7 +1,19 @@
-## iOS 커리어 스타터 캠프
+## ios-project-manager
 
-### 프로젝트 관리 앱 저장소
+![ios-project-manager](https://user-images.githubusercontent.com/38858863/125595949-6521f5bc-a648-4cf9-bc66-b002440991e5.gif)
 
-- 이 저장소를 자신의 저장소로 fork하여 프로젝트를 진행합니다
+## Code Review
 
+- [Step1](https://github.com/yagom-academy/ios-project-manager/pull/13)
 
+## 팀원
+
+- [KangKyung](https://github.com/KangKyung)
+- [Sunny](https://github.com/unme88)
+- [Tak](https://github.com/Tak95)
+
+## 프로젝트 수행
+
+- 기간: 2021.06.28 ~ 2021.07.16
+- [Ground Rule](https://github.com/KangKyung/ios-project-manager/blob/main/Ground%20Rule.md)
+- [TWL-2021.06.28 ~ 2021.07.16](https://github.com/KangKyung/ios-project-manager/blob/main/TWL-2021.06.28%20%7E%202021.07.16.md)
