@@ -25,44 +25,15 @@ final class DetailViewModel {
     func tableItem() -> MemoTableViewCellModel? {
         return item
     }
-   
-    private func removeCell(
-        at index: Int,
-        tableViewType: TableViewType
-    ) {
-        // TODO: - server API "remove"
-        Dummy.shared.remove(
-            tableViewType: tableViewType,
-            at: index
-        )
+    
+    func insert(memo: Memo) {
+        NetworkManager().postData(data: memo) {}
     }
     
-    func insert(
-        cell: Memo,
-        at index: Int = Dummy.shared.todo.endIndex,
-        tableViewType: TableViewType
-    ) {
-        // TODO: - server API "insert"
-        Dummy.shared.insert(
-            tableViewType: tableViewType,
-            cell: cell,
-            at: index
-        )
-    }
-    
-    func edit(
-        cell: Memo,
-        at index: Int,
-        tableViewType: TableViewType
-    ) {
-        removeCell(
-            at: index,
-            tableViewType: tableViewType
-        )
-        insert(
-            cell: cell,
-            at: index,
-            tableViewType: tableViewType
-        )
+    func edit(cell: Memo) {
+        NetworkManager().patchData(
+            data: cell,
+            id: cell.id
+        ) {}
     }
 }

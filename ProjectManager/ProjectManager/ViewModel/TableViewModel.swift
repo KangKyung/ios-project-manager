@@ -10,6 +10,7 @@ import Foundation
 final class TableViewModel {
     private let dateFormatter = DateFormatter()
     let tableViewType: TableViewType
+    // TODO: - MemoTableViewCellModel에 id값을 넣는것에 대해 고민하자..
     var memoList: Observable<[MemoTableViewCellModel]> = Observable([])
     var numOfList: Int {
         return memoList.value?.count ?? 0
@@ -20,58 +21,91 @@ final class TableViewModel {
     }
     
     func fetchData() {
-        memoList.value = Dummy.shared.dummy(as: tableViewType).compactMap({
-            MemoTableViewCellModel(
-                title: $0.title,
-                content: $0.content,
-                date: dateFormatter.numberToString(number: $0.date),
-                isDateColorRed: checkDateColor(date: dateFormatter.numberToString(number: $0.date))
-            )
-        })
+        NetworkManager().getData(
+            type: tableViewType,
+            page: 1
+        ) { receivedMemoModel in
+            self.memoList.value = receivedMemoModel.items.compactMap({
+                MemoTableViewCellModel(
+                    id: $0.id,
+                    title: $0.title,
+                    content: $0.content,
+                    dueDate: self.dateFormatter.changeStringDateFormat(
+                        date: $0.dueDate,
+                        beforeDateFormat: .ymd_hms,
+                        afterDateFormat: .ymd
+                    ),
+                    isDateColorRed: self.checkDateColor(
+                        date: $0.dueDate
+                    )
+                )
+            })
+        }
     }
     
     private func checkDateColor(date stringOfDate: String) -> Bool {
-        let stringOfCurrentDate = dateFormatter.dateToString(date: Date())
-        return stringOfDate < stringOfCurrentDate ? true : false
+        let date = dateFormatter.changeStringDateFormat(
+            date: stringOfDate,
+            beforeDateFormat: .ymd_hms,
+            afterDateFormat: .ymd
+        )
+        let currentDate = dateFormatter.dateToString(
+            date: Date(),
+            dateFormat: .ymd
+        )
+        
+        return date < currentDate ? true : false
     }
     
-    // TODO: - 이름 변경
+    // TODO: - 네이밍 좀 더 가독성있게 변경하기
     // memoInfo, itemInfo, cellInfo
-    // step2에서 cellInfo를 변경하면서 다 변경해주자
     func memoInfo(at index: Int) -> MemoTableViewCellModel? {
         return memoList.value?[index]
     }
     
-    func itemInfo(at index: Int) -> Memo {
+    func itemInfo(
+        at index: Int,
+        id: String = ""
+    ) -> Memo {
         let item = memoInfo(at: index)!
+        let dueDate = dateFormatter.changeStringDateFormat(
+            date: item.dueDate,
+            beforeDateFormat: .ymd_hms,
+            afterDateFormat: .ymd
+        )
         return Memo(
+            id: item.id,
             title: item.title,
             content: item.content,
-            date: dateFormatter.stringToNumber(string: item.date)
+            dueDate: dueDate,
+            memoType: tableViewType.rawValue
         )
     }
     
-    func removeCell(at index: Int) {
-        // TODO: - server API "remove"
-        Dummy.shared.remove(
-            tableViewType: tableViewType,
-            at: index
-        )
-        
-        fetchData()
+    func removeCell(id: String) {
+        NetworkManager().deleteData(id: id) {
+            self.fetchData()
+        }
     }
     
     func insert(
         cell: Memo,
-        at index: Int
+        destinationTableViewType: TableViewType
     ) {
-        // TODO: - server API "insert"
-        Dummy.shared.insert(
-            tableViewType: tableViewType,
-            cell: cell,
-            at: index
+        let dueDate = DateFormatter().changeStringDateFormat(
+            date: cell.dueDate,
+            beforeDateFormat: .ymd,
+            afterDateFormat: .ymd_hms
         )
-        
-        fetchData()
+        let data = Memo(
+            id: cell.id,
+            title: cell.title,
+            content: cell.content,
+            dueDate: dueDate,
+            memoType: destinationTableViewType.rawValue
+        )
+        NetworkManager().postData(data: data) {
+            self.fetchData()
+        }
     }
 }

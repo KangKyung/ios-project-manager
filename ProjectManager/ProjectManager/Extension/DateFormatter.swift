@@ -7,51 +7,52 @@
 
 import Foundation
 
-// Todo: - step2에서 Double타입의 경우에 해당하는 함수를 삭제하자
 extension DateFormatter {
-    func numberToString(number: TimeInterval) -> String {
-        let date = Date(timeIntervalSince1970: number)
+    func dateToString(
+        date: Date,
+        dateFormat: DateFormat
+    ) -> String {
         self.locale = Locale(identifier: Locale.current.identifier)
-        self.dateFormat = "yyyy-MM-dd"
+        self.dateFormat = dateFormat.rawValue
         
         return self.string(from: date)
     }
     
-    func dateToNumber(date: Date) -> TimeInterval {
-        return date.timeIntervalSince1970
-    }
-    
-    func dateToString(date: Date) -> String {
-        let numberOfDate = dateToNumber(date: date)
-        let stringOfDate = numberToString(number: numberOfDate)
-        
-        return stringOfDate
-    }
-    
-    func numberToDate(number: TimeInterval) -> Date {
-        let stringOfDate = numberToString(number: number)
+    func stringToDate(
+        string: String,
+        dateFormat: DateFormat
+    ) -> Date {
         self.locale = Locale(identifier: Locale.current.identifier)
-        self.dateFormat = "yyyy-MM-dd"
-        let date = self.date(from: stringOfDate)!
+        self.dateFormat = dateFormat.rawValue
         
-        return date
-    }
-    
-    func stringToDate(string: String) -> Date {
-        self.locale = Locale(identifier: Locale.current.identifier)
-        self.dateFormat = "yyyy-MM-dd"
-        guard let date = self.date(from: string)
+        // TODO: - 보다 가독성이 높은, 클린한 코딩을 위해 고민해보자..
+        var dateString = string
+        if string.count == 10 && dateFormat == .ymd_hms {
+            dateString += "T00:00:00Z"
+        }
+        guard let date = self.date(from: dateString)
         else {
             print("date에 이상한 String이 들어갔음..")
+            print("String: \(dateString)")
+            
             return Date()
         }
         
         return date
     }
     
-    func stringToNumber(string: String) -> TimeInterval {
-        let date = stringToDate(string: string)
+    func changeStringDateFormat(
+        date: String,
+        beforeDateFormat: DateFormat,
+        afterDateFormat: DateFormat
+    ) -> String {
+        let date = stringToDate(
+            string: date,
+            dateFormat: beforeDateFormat
+        )
+        self.locale = Locale(identifier: Locale.current.identifier)
+        self.dateFormat = afterDateFormat.rawValue
         
-        return dateToNumber(date: date)
+        return self.string(from: date)
     }
 }

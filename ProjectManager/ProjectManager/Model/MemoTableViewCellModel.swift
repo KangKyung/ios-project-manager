@@ -8,8 +8,9 @@
 import Foundation
 
 struct MemoTableViewCellModel {
+    let id: String
     let title: String
     let content: String
-    let date: String
+    let dueDate: String
     let isDateColorRed: Bool
 }
