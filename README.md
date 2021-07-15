@@ -1,10 +1,17 @@
 ## ios-project-manager
 
-![ios-project-manager](https://user-images.githubusercontent.com/38858863/125595949-6521f5bc-a648-4cf9-bc66-b002440991e5.gif)
+#### dummy
+![ios-project-manager1](https://user-images.githubusercontent.com/38858863/125595949-6521f5bc-a648-4cf9-bc66-b002440991e5.gif)
+
+#### server comunication
+- [Memo Management API 연동](https://app.swaggerhub.com/apis-docs/Neph3779/Project_Manager/1.0.0)
+
+![ios-project-manager2](https://user-images.githubusercontent.com/38858863/125845032-2384deae-bca7-4480-a7b2-49603ac27310.gif)
 
 ## Code Review
 
 - [Step1](https://github.com/yagom-academy/ios-project-manager/pull/13)
+- [Step2](https://github.com/yagom-academy/ios-project-manager/pull/18)
 
 ## 팀원
 
